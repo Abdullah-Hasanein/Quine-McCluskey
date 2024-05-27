@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quine-McCluskey Method</title>
+
+    <link rel="stylesheet" href="Assets/style.css">
+    <!-- Bootstrap CSS -->
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <!-- AOS CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" rel="stylesheet">
+</head>
+
+<body>
+    <div class="container mt-5 custom-section" data-aos="fade-up">
+        <h1 class="text-center">Quine-McCluskey Tabular Method</h1>
+
+        <form id="minterm-form" class="my-4">
+            <div class="form-group">
+                <label for="minterms">Enter minterms (comma-separated):</label>
+                <input type="text" class="form-control" id="minterms" name="minterms"
+                    value="2, 6, 8, 9, 10, 11, 14, 15">
+            </div>
+            <button type="submit" class="btn btn-block">Simplify</button>
+        </form>
+
+        <div id="initial-minterms" class="hidden mt-4" data-aos="fade-up">
+            <h2>Initial Minterms</h2>
+            <table id="initial-minterms-table" class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>Initial Minterms</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+
+        <div id="grouped-result" class="hidden mt-4" data-aos="fade-up">
+            <h2>Grouped Minterms</h2>
+            <table id="grouped-minterms-table" class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>Group</th>
+                        <th>Minterms</th>
+                        <th>W</th>
+                        <th>X</th>
+                        <th>Y</th>
+                        <th>Z</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+
+        <div id="merged-result" class="hidden mt-4" data-aos="fade-up">
+            <h2>Merged Minterms</h2>
+            <table id="merged-minterms-table" class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th colspan="6">Iteration</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+
+        <div id="final-result" class="hidden mt-4" data-aos="fade-up">
+            <h2>Final Reduced Table</h2>
+            <table id="final-merged-minterms-table" class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>Group</th>
+                        <th>Minterms</th>
+                        <th>W</th>
+                        <th>X</th>
+                        <th>Y</th>
+                        <th>Z</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+
+        <div id="prime-implicants" class="hidden mt-4" data-aos="fade-up">
+            <h2>Prime Implicants</h2>
+            <ul id="prime-implicants-list" class="list-group"></ul>
+            <h2 class="mt-4">Prime Implicant Table</h2>
+            <table id="prime-implicant-table" class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>Prime Implicant</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+
+        <div id="essential-prime-implicants" class="hidden mt-4" data-aos="fade-up">
+            <h2>Essential Prime Implicants</h2>
+            <ul id="essential-prime-implicants-list" class="list-group"></ul>
+        </div>
+    </div>
+
+    <div class="container custom-section2" data-aos="fade-up">
+        <div class="row copy">
+            <div class="col-12">
+                <p>
+                    This project was created under supervision of 
+                    <span>Dr. Muhammed Al-Muhammed</span> 
+                    by <br>
+                    <span>Abdullah Hasanein</span>
+                    as part of the
+                    <span>Computer Design and Organization</span>
+                    course 
+                    <br>
+                    at 
+                    <span>American University in Madaba.</span>
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS and dependencies -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <!-- AOS JS -->
+    <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
+    <!-- Initialize AOS -->
+    <script>
+        AOS.init();
+    </script>
+    <script src="Assets/script.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,207 @@
+/* Variables for easy theme customization */
+:root {
+    --primary-color: #00afaa;
+    --secondary-color: #555;
+    --bg-color: #f4f7f6;
+    --white-color: #ffffff;
+    --text-color: #333333;
+    --box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* General Styles */
+body {
+    background-image: url('bg.png');
+    background-size: cover;
+}
+
+ul li{
+    list-style-type: none;
+}
+
+.custom-section{
+    background-color: #ffffffcc;
+    border: var(--primary-color) 8px solid;
+    padding: 30px !important;
+    max-width: 900px !important;
+    border-radius: 20px;
+}
+
+.custom-section2{
+    color: var(--white-color);
+    text-align: center;
+    padding: 30px !important;
+    max-width: 900px !important;
+}
+
+.custom-section2 span{
+    color: var(--primary-color);
+    font-weight: bold;
+}
+
+.container:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2);
+}
+
+/* Header Styles */
+h1 {
+    font-size: 2.5rem;
+    color: var(--text-color);
+    text-align: center;
+    margin-bottom: 20px;
+    position: relative;
+    animation: fadeInDown 1s ease-out;
+}
+
+h1::after {
+    content: '';
+    display: block;
+    width: 150px;
+    height: 4px;
+    background-color: var(--primary-color);
+    margin: 10px auto;
+    border-radius: 2px;
+}
+
+/* Form Styles */
+form {
+    margin-bottom: 20px;
+    animation: fadeInUp 1s ease-out;
+}
+
+label {
+    font-size: 1.1rem;
+    color: var(--text-color);
+}
+
+input, button {
+    margin-bottom: 10px;
+    font-size: 1rem;
+    border-radius: 4px;
+}
+
+input {
+    padding: 10px;
+    border: 1px solid var(--secondary-color);
+    transition: border-color 0.3s ease;
+}
+
+input:focus {
+    border-color: var(--primary-color);
+    outline: none;
+}
+
+button {
+    padding: 10px;
+    background-color: var(--primary-color) !important;
+    color: var(--white-color) !important;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+button:hover {
+    background-color: darken(var(--primary-color), 10%);
+    transform: scale(1.05);
+}
+
+/* Result Styles */
+.hidden {
+    display: none;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    background-color: var(--white-color);
+    box-shadow: var(--box-shadow);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    animation: fadeInUp 1s ease-out;
+}
+
+table:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+th, td {
+    padding: 15px;
+    border: 1px solid var(--secondary-color);
+    text-align: center;
+    font-size: 0.875rem;
+    color: var(--text-color);
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+th{
+    color: var(--white-color);
+    text-align: center !important;
+    background-color: var(--primary-color);
+}
+
+thead {
+    background-color: var(--primary-color);
+    color: var(--white-color) !important;
+    text-align: center;
+}
+
+tbody tr:nth-child(even) {
+    background-color: var(--bg-color);
+}
+
+tbody tr:hover {
+    background-color: lighten(var(--primary-color), 30%);
+    color: var(--white-color);
+}
+
+/* Prime Implicants List */
+#prime-implicants-list li, #essential-prime-implicants-list li {
+    background-color: var(--secondary-color);
+    color: var(--white-color);
+    margin: 5px 0;
+    padding: 10px;
+    border-radius: 5px;
+    font-size: 0.875rem;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+    animation: fadeInLeft 1s ease-out;
+}
+
+#prime-implicants-list li:hover, #essential-prime-implicants-list li:hover {
+    background-color: var(--primary-color);
+    transform: translateX(10px);
+}
+
+/* Animations */
+@keyframes fadeInDown {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeInLeft {
+    from {
+        opacity: 0;
+        transform: translateX(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
