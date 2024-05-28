@@ -5,6 +5,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Quine-McCluskey Method</title>
+    
+    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
 
     <link rel="stylesheet" href="style.css">
     <!-- Bootstrap CSS -->
@@ -20,10 +22,9 @@
         <form id="minterm-form" class="my-4">
             <div class="form-group">
                 <label for="minterms">Enter minterms (comma-separated):</label>
-                <input type="text" class="form-control" id="minterms" name="minterms"
-                    value="2, 6, 8, 9, 10, 11, 14, 15">
+                <input type="text" class="form-control" id="minterms" name="minterms" value="2, 6, 8, 9, 10, 11, 14, 15">
             </div>
-            <button type="submit" class="btn btn-block">Simplify</button>
+            <button type="submit" class="btn btn-block btn-primary">Simplify</button>
         </form>
 
         <div id="initial-minterms" class="hidden mt-4" data-aos="fade-up">
@@ -84,14 +85,20 @@
             </table>
         </div>
 
-        <div id="prime-implicants" class="hidden mt-4" data-aos="fade-up">
-            <h2>Prime Implicants</h2>
-            <ul id="prime-implicants-list" class="list-group"></ul>
-            <h2 class="mt-4">Prime Implicant Table</h2>
-            <table id="prime-implicant-table" class="table table-bordered">
+        <div id="prime-implicant-chart" class="hidden mt-4" data-aos="fade-up">
+            <h2>Prime Implicant Chart</h2>
+            <table id="prime-implicant-chart-table" class="table table-bordered">
                 <thead>
                     <tr>
-                        <th>Prime Implicant</th>
+                        <th>PIs/Minterms</th>
+                        <th>2</th>
+                        <th>6</th>
+                        <th>8</th>
+                        <th>9</th>
+                        <th>10</th>
+                        <th>11</th>
+                        <th>14</th>
+                        <th>15</th>
                     </tr>
                 </thead>
                 <tbody></tbody>
@@ -100,7 +107,19 @@
 
         <div id="essential-prime-implicants" class="hidden mt-4" data-aos="fade-up">
             <h2>Essential Prime Implicants</h2>
-            <ul id="essential-prime-implicants-list" class="list-group"></ul>
+            <table id="essential-prime-implicants-table" class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>Essential Prime Implicants</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+
+        <div id="final-expression" class="hidden mt-4" data-aos="fade-up">
+            <h2>Minimal Expression</h2>
+            <div class="alert alert-info"></div>
         </div>
     </div>
 
@@ -108,15 +127,15 @@
         <div class="row copy">
             <div class="col-12">
                 <p>
-                    This project was created under supervision of 
-                    <span>Dr. Muhammed Al-Muhammed</span> 
+                    This project was created under supervision of
+                    <span>Dr. Muhammed Al-Muhammed</span>
                     by <br>
                     <span>Abdullah Hasanein</span>
                     as part of the
                     <span>Computer Design and Organization</span>
-                    course 
+                    course
                     <br>
-                    at 
+                    at
                     <span>American University in Madaba.</span>
                 </p>
             </div>
