@@ -30,18 +30,18 @@ document.getElementById('minterm-form').addEventListener('submit', function (eve
     // Step 4: Removing redundant minterms
     const uniqueMergedMinterms = removeRedundantMinterms(mergedMinterms);
     displayFinalMergedMinterms(uniqueMergedMinterms);
-    const primeImplicants = getPrimeImplicants(uniqueMergedMinterms);
 
-    // Step 5: Constructing prime implicant table
-    const primeImplicantTable = constructPrimeImplicantTable(primeImplicants, minterms);
-    displayPrimeImplicantTable(primeImplicantTable, primeImplicants, minterms);
+    // Step 5: Prime Implicant Chart
+    const primeImplicantChart = generatePrimeImplicantChart(uniqueMergedMinterms, minterms);
+    displayPrimeImplicantChart(primeImplicantChart);
 
-    // Step 6: Identifying essential prime implicants
-    const essentialPrimeImplicants = identifyEssentialPrimeImplicants(primeImplicantTable, primeImplicants, minterms);
+    // Step 6: Extract Essential Prime Implicants
+    const essentialPrimeImplicants = extractEssentialPrimeImplicants(primeImplicantChart);
     displayEssentialPrimeImplicants(essentialPrimeImplicants);
 
-    // Step 7: Possible function minimizations
-    displayPossibleMinimizations(essentialPrimeImplicants);
+    // Step 7: Display Final Expression
+    const finalExpression = generateFinalExpression(essentialPrimeImplicants);
+    displayFinalExpression(finalExpression);
 });
 
 function validateInput(minterms) {
@@ -85,6 +85,7 @@ function mergeMinterms(groups) {
     let groupIndex = 1;
 
     const groupKeys = Object.keys(groups).map(Number).sort((a, b) => a - b);
+    const checkedBinaries = new Set();
 
     for (let i = 0; i < groupKeys.length - 1; i++) {
         const currentGroup = groups[groupKeys[i]];
@@ -105,6 +106,8 @@ function mergeMinterms(groups) {
                             minterms: mergedMinterms,
                             binary: mergedBinary
                         });
+                        checkedBinaries.add(item1.binary);
+                        checkedBinaries.add(item2.binary);
                         merged = true;
                     }
                 });
@@ -112,6 +115,18 @@ function mergeMinterms(groups) {
             groupIndex++;
         }
     }
+
+    // Include unmerged groups in the next iteration
+    Object.keys(groups).forEach(group => {
+        groups[group].forEach(mintermObj => {
+            if (!checkedBinaries.has(mintermObj.binary)) {
+                if (!mergedGroups[groupIndex]) {
+                    mergedGroups[groupIndex] = [];
+                }
+                mergedGroups[groupIndex].push(mintermObj);
+            }
+        });
+    });
 
     return merged ? mergedGroups : {};
 }
@@ -256,131 +271,137 @@ function displayFinalMergedMinterms(uniqueMergedMinterms) {
     document.getElementById('final-result').classList.remove('hidden');
 }
 
-function getPrimeImplicants(uniqueMergedMinterms) {
-    const primeImplicants = [];
+function generatePrimeImplicantChart(uniqueMergedMinterms, minterms) {
+    const inputMinterms = document.getElementById('minterms').value.split(',').map(Number);
+    const maxMinterm = Math.max(...inputMinterms);
+    const headerRow = document.createElement('tr');
+    const header = document.createElement('th');
+    header.textContent = 'PIs/Minterms';
+    headerRow.appendChild(header);
+
+    for (let i = 0; i <= maxMinterm; i++) {
+        if (inputMinterms.includes(i)) {
+            const mintermHeader = document.createElement('th');
+            mintermHeader.textContent = i;
+            headerRow.appendChild(mintermHeader);
+        }
+    }
+
+    const primeImplicantChartTable = document.getElementById('prime-implicant-chart-table');
+    const thead = primeImplicantChartTable.querySelector('thead');
+    thead.innerHTML = '';
+    thead.appendChild(headerRow);
+
+    const primeImplicantChart = [];
 
     Object.keys(uniqueMergedMinterms).forEach(group => {
         uniqueMergedMinterms[group].forEach(mintermObj => {
-            primeImplicants.push(mintermObj);
+            const row = {
+                minterms: mintermObj.minterms.join(', '),
+                binary: mintermObj.binary,
+                chart: {}
+            };
+            minterms.forEach(minterm => {
+                row.chart[minterm] = mintermObj.minterms.includes(minterm) ? 'X' : '';
+            });
+            primeImplicantChart.push(row);
         });
     });
 
-    const primeImplicantsList = document.getElementById('prime-implicants-list');
-    primeImplicantsList.innerHTML = '';
-
-    primeImplicants.forEach(implicant => {
-        const listItem = document.createElement('li');
-        listItem.textContent = convertToVariables(implicant.binary);
-        primeImplicantsList.appendChild(listItem);
-    });
-
-    return primeImplicants;
+    return primeImplicantChart;
 }
 
-function convertToVariables(binary) {
-    const variables = ['W', 'X', 'Y', 'Z'];
-    let result = '';
-
-    binary.split('').forEach((bit, index) => {
-        if (bit === '1') result += variables[index];
-        if (bit === '0') result += `${variables[index]}'`;
-    });
-
-    return result;
-}
-
-function constructPrimeImplicantTable(primeImplicants, minterms) {
-    const table = {};
-
-    primeImplicants.forEach(primeImplicant => {
-        primeImplicant.minterms.forEach(minterm => {
-            if (!table[minterm]) {
-                table[minterm] = [];
-            }
-            table[minterm].push(primeImplicant.binary);
-        });
-    });
-
-    return table;
-}
-
-function displayPrimeImplicantTable(primeImplicantTable, primeImplicants, minterms) {
-    const tableHead = document.getElementById('prime-implicant-table').querySelector('thead');
-    const tableBody = document.getElementById('prime-implicant-table').querySelector('tbody');
-
-    const headerRow = document.createElement('tr');
-    const primeImplicantHeaderCell = document.createElement('th');
-    primeImplicantHeaderCell.textContent = 'Prime Implicant';
-    headerRow.appendChild(primeImplicantHeaderCell);
-
-    minterms.forEach(minterm => {
-        const cell = document.createElement('th');
-        cell.textContent = minterm;
-        headerRow.appendChild(cell);
-    });
-
-    tableHead.innerHTML = '';
-    tableHead.appendChild(headerRow);
+function displayPrimeImplicantChart(primeImplicantChart) {
+    const tableBody = document.getElementById('prime-implicant-chart-table').querySelector('tbody');
     tableBody.innerHTML = '';
 
-    primeImplicants.forEach(primeImplicant => {
-        const row = document.createElement('tr');
-        const implicantCell = document.createElement('td');
-        implicantCell.textContent = convertToVariables(primeImplicant.binary);
-        row.appendChild(implicantCell);
+    primeImplicantChart.forEach(row => {
+        const tr = document.createElement('tr');
+        const mintermsCell = document.createElement('td');
+        mintermsCell.textContent = row.minterms;
+        tr.appendChild(mintermsCell);
 
-        minterms.forEach(minterm => {
+        Object.keys(row.chart).forEach(minterm => {
             const cell = document.createElement('td');
-            cell.textContent = primeImplicantTable[minterm] && primeImplicantTable[minterm].includes(primeImplicant.binary) ? 'X' : '';
-            row.appendChild(cell);
+            cell.textContent = row.chart[minterm];
+            tr.appendChild(cell);
         });
 
-        tableBody.appendChild(row);
+        tableBody.appendChild(tr);
     });
 
-    document.getElementById('prime-implicants').classList.remove('hidden');
+    document.getElementById('prime-implicant-chart').classList.remove('hidden');
 }
 
-function identifyEssentialPrimeImplicants(primeImplicantTable, primeImplicants, minterms) {
+function extractEssentialPrimeImplicants(primeImplicantChart) {
     const essentialPrimeImplicants = [];
+    const mintermsCovered = new Set();
+    const mintermColumns = Object.keys(primeImplicantChart[0].chart);
 
-    minterms.forEach(minterm => {
-        const coveringImplicants = primeImplicantTable[minterm];
-        if (coveringImplicants && coveringImplicants.length === 1) {
-            const essentialImplicant = coveringImplicants[0];
-            if (!essentialPrimeImplicants.includes(essentialImplicant)) {
-                essentialPrimeImplicants.push(essentialImplicant);
-            }
-        }
-    });
+    while (mintermsCovered.size < mintermColumns.length) {
+        const essentialRow = findEssentialPrimeImplicant(primeImplicantChart, mintermsCovered);
+        if (!essentialRow) break;
+        essentialPrimeImplicants.push(essentialRow.binary);
+        essentialRow.minterms.split(', ').forEach(minterm => mintermsCovered.add(minterm));
+
+        // Remove covered minterms from the chart
+        primeImplicantChart = primeImplicantChart.filter(row => {
+            return !essentialRow.minterms.split(', ').every(minterm => row.chart[minterm] === 'X');
+        });
+    }
 
     return essentialPrimeImplicants;
 }
 
-function displayEssentialPrimeImplicants(essentialPrimeImplicants) {
-    const essentialList = document.getElementById('essential-prime-implicants-list');
-    essentialList.innerHTML = '';
+function findEssentialPrimeImplicant(primeImplicantChart, mintermsCovered) {
+    let maxCovered = 0;
+    let essentialRow = null;
 
-    essentialPrimeImplicants.forEach(implicant => {
-        const listItem = document.createElement('li');
-        listItem.textContent = convertToVariables(implicant);
-        essentialList.appendChild(listItem);
+    primeImplicantChart.forEach(row => {
+        const coveredMinterms = Object.keys(row.chart).filter(minterm => row.chart[minterm] === 'X' && !mintermsCovered.has(minterm));
+        if (coveredMinterms.length > maxCovered) {
+            maxCovered = coveredMinterms.length;
+            essentialRow = row;
+        }
+    });
+
+    return essentialRow;
+}
+
+function displayEssentialPrimeImplicants(essentialPrimeImplicants) {
+    const tableBody = document.getElementById('essential-prime-implicants-table').querySelector('tbody');
+    tableBody.innerHTML = '';
+
+    essentialPrimeImplicants.forEach(binary => {
+        const row = document.createElement('tr');
+        const cell = document.createElement('td');
+        cell.textContent = binary;
+        row.appendChild(cell);
+        tableBody.appendChild(row);
     });
 
     document.getElementById('essential-prime-implicants').classList.remove('hidden');
 }
 
-function displayPossibleMinimizations(essentialPrimeImplicants) {
-    const resultDiv = document.createElement('div');
-    const resultHeader = document.createElement('h2');
-    resultHeader.textContent = 'Possible Function Minimizations';
-    const resultList = document.createElement('ul');
+function generateFinalExpression(essentialPrimeImplicants) {
+    const terms = essentialPrimeImplicants.map(binary => {
+        let term = '';
+        const variables = ['W', 'X', 'Y', 'Z'];
+        binary.split('').forEach((bit, index) => {
+            if (bit === '1') {
+                term += variables[index];
+            } else if (bit === '0') {
+                term += variables[index] + "'";
+            }
+        });
+        return term;
+    });
 
-    const listItem = document.createElement('li');
-    listItem.textContent = `F = ${essentialPrimeImplicants.map(convertToVariables).join(' + ')}`;
-    resultList.appendChild(listItem);
+    return terms.join(' + ');
+}
 
-    resultDiv.appendChild(resultHeader);
-    resultDiv.appendChild(resultList);
-    document.querySelector('.container').appendChild(resultDiv);
+function displayFinalExpression(expression) {
+    const resultDiv = document.getElementById('final-expression');
+    resultDiv.textContent = `Minimal Expression: ${expression}`;
+    resultDiv.classList.remove('hidden');
 }
